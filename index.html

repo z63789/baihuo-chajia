@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>百货店查价</title>
+<style>
+body{background:#f4f4f4;padding:20px;}
+.box{background:#fff;padding:15px;margin:10px 0;border-radius:10px;}
+input,button{width:100%;padding:10px;margin:5px 0;box-sizing:border-box;}
+button{background:#007bff;color:white;border:none;border-radius:5px;}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h3>添加商品</h3>
+  <input id="gname" placeholder="商品名">
+  <input id="gprice" placeholder="价格">
+  <button onclick="addGood()">添加</button>
+</div>
+
+<div class="box">
+  <h3>查询价格</h3>
+  <input id="skey" placeholder="输入商品名">
+  <button onclick="searchGood()">查询</button>
+  <div id="result"></div>
+</div>
+
+<script>
+var goods = JSON.parse(localStorage.getItem('goods')) || {};
+
+function addGood() {
+  var name = document.getElementById('gname').value;
+  var price = document.getElementById('gprice').value;
+  if (!name || !price) return alert('请填完整');
+  goods[name] = price;
+  localStorage.setItem('goods', JSON.stringify(goods));
+  alert('添加成功');
+  document.getElementById('gname').value = '';
+  document.getElementById('gprice').value = '';
+}
+
+function searchGood() {
+  var key = document.getElementById('skey').value;
+  var res = document.getElementById('result');
+  if (goods[key]) {
+    res.innerHTML = key + '：' + goods[key];
+  } else {
+    res.innerHTML = '未找到';
+  }
+}
+</script>
+
+</body>
+</html>
