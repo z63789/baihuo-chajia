@@ -1,56 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>百货店查价</title>
-<style>
-body{background:#f4f4f4;padding:20px;}
-.box{background:#fff;padding:15px;margin:10px 0;border-radius:10px;}
-input,button{width:100%;padding:10px;margin:5px 0;box-sizing:border-box;}
-button{background:#007bff;color:white;border:none;border-radius:5px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百货查价</title>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0;font-family: sans-serif;}
+        body{background:#f5f5f5;padding:15px;}
+        .box{background:white;border-radius:10px;padding:15px;margin-bottom:15px;}
+        h2{text-align:center;margin-bottom:10px;font-size:18px;}
+        input{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px;}
+        button{width:100%;padding:10px;background:#007aff;color:white;border:none;border-radius:6px;font-size:16px;}
+        .result{margin-top:10px;padding:10px;background:#f0f0f0;border-radius:6px;}
+        .item{display:flex;justify-content:space-between;padding:5px 0;}
+    </style>
 </head>
 <body>
+    <div class="box">
+        <h2>添加商品</h2>
+        <input type="text" id="name" placeholder="商品名称">
+        <input type="text" id="price" placeholder="价格（如：5元）">
+        <button onclick="add()">添加</button>
+    </div>
+    <div class="box">
+        <h2>查询价格</h2>
+        <input type="text" id="search" placeholder="输入商品名">
+        <button onclick="find()">查询</button>
+        <div class="result" id="res"></div>
+    </div>
+    <div class="box">
+        <h2>全部商品</h2>
+        <div id="list"></div>
+    </div>
 
-<div class="box">
-  <h3>添加商品</h3>
-  <input id="gname" placeholder="商品名">
-  <input id="gprice" placeholder="价格">
-  <button onclick="addGood()">添加</button>
-</div>
-
-<div class="box">
-  <h3>查询价格</h3>
-  <input id="skey" placeholder="输入商品名">
-  <button onclick="searchGood()">查询</button>
-  <div id="result"></div>
-</div>
-
-<script>
-var goods = JSON.parse(localStorage.getItem('goods')) || {};
-
-function addGood() {
-  var name = document.getElementById('gname').value;
-  var price = document.getElementById('gprice').value;
-  if (!name || !price) return alert('请填完整');
-  goods[name] = price;
-  localStorage.setItem('goods', JSON.stringify(goods));
-  alert('添加成功');
-  document.getElementById('gname').value = '';
-  document.getElementById('gprice').value = '';
-}
-
-function searchGood() {
-  var key = document.getElementById('skey').value;
-  var res = document.getElementById('result');
-  if (goods[key]) {
-    res.innerHTML = key + '：' + goods[key];
-  } else {
-    res.innerHTML = '未找到';
-  }
-}
-</script>
-
+    <script>
+        let data = JSON.parse(localStorage.getItem('goods')) || {};
+        function render(){
+            let list = document.getElementById('list');
+            list.innerHTML = '';
+            for(let k in data){
+                list.innerHTML += '<div class="item"><span>'+k+'</span><span>'+data[k]+'</span></div>';
+            }
+        }
+        function add(){
+            let n = document.getElementById('name').value;
+            let p = document.getElementById('price').value;
+            if(!n||!p){alert('请填完整');return;}
+            data[n] = p;
+            localStorage.setItem('goods', JSON.stringify(data));
+            document.getElementById('name').value='';
+            document.getElementById('price').value='';
+            render();
+        }
+        function find(){
+            let s = document.getElementById('search').value;
+            let r = document.getElementById('res');
+            if(data[s]){
+                r.innerHTML = s + '：' + data[s];
+            }else{
+                r.innerHTML = '未找到该商品';
+            }
+        }
+        render();
+    </script>
 </body>
 </html>
